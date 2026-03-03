@@ -20,7 +20,7 @@ model User {
   password      String         // Hash bcrypt
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  presentations Presentation[] @relation("UserPresentations", onDelete: Cascade)
+  presentations Presentation[] @relation("UserPresentations")
 
   @@index([email])
 }
