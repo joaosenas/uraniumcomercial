@@ -1,0 +1,43 @@
+// ===========================================
+// Schema PostgreSQL - Uranium Company
+// Hub de Apresentações Comerciais
+// ===========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de usuário do sistema
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String?
+  password      String         // Hash bcrypt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  presentations Presentation[] @relation("UserPresentations", onDelete: Cascade)
+
+  @@index([email])
+}
+
+// Modelo de apresentação comercial
+model Presentation {
+  id           String   @id @default(cuid())
+  clientName   String   // Nome do cliente
+  projectTitle String   // Título do projeto
+  htmlCode     String   @db.Text // Código HTML/CSS/JS da apresentação
+  status       String   @default("DRAFT") // ACTIVE ou DRAFT
+  createdBy    String   // ID do usuário que criou
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  author       User     @relation("UserPresentations", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([clientName])
+  @@index([status])
+  @@index([createdBy])
+}

@@ -1,0 +1,22 @@
+# ===========================================
+# Nixpacks Configuration - Uranium Company
+# Deploy no EasyPanel (Hostinger VPS)
+# ===========================================
+
+[phases.setup]
+nixPkgs = ['nodejs_20', 'openssl', 'openssl.dev']
+
+[phases.install]
+cmds = ['npm ci --include=dev']
+
+[phases.build]
+cmds = [
+    'npx prisma generate',
+    'npm run build'
+]
+
+[start]
+cmd = 'node .next/standalone/server.js'
+
+[variables]
+NODE_ENV = 'production'
